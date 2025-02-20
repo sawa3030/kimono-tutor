@@ -38,8 +38,10 @@ transform = transforms.Compose([
 ])
 
 training_data = ImageFolder(root=os.path.expanduser('~/kimono/train_data/'), transform=transform)
-train_dataloader = DataLoader(training_data, batch_size=15, shuffle=True)
-test_dataloader = DataLoader(training_data, batch_size=15, shuffle=True)
+train_dataloader = DataLoader(training_data, batch_size=10, shuffle=True)
+test_dataloader = DataLoader(training_data, batch_size=10, shuffle=True)
+
+print(training_data.class_to_idx)
 
 for X, y in test_dataloader:
     print("Shape of X [N, C, H, W]: ", X.shape)
@@ -60,7 +62,7 @@ class NeuralNetwork(nn.Module):
             nn.ReLU(),
             nn.Linear(512, 512),
             nn.ReLU(),
-            nn.Linear(512, 10),
+            nn.Linear(512, 5),
             nn.ReLU()
         )
 
@@ -120,30 +122,3 @@ print("Done!")
 
 torch.save(model.state_dict(), "model.pth")
 print("Saved PyTorch Model State to model.pth")
-
-# 実際に試してみるパート
-weights = torchvision.models.ResNet18_Weights.DEFAULT
-model = torchvision.models.resnet18(weights=weights)
-model.fc = nn.Linear(model.fc.in_features, len(training_data.classes)) 
-model.load_state_dict(torch.load("model.pth"))
-
-# classes = [
-#     "T-shirt/top",
-#     "Trouser",
-#     "Pullover",
-#     "Dress",
-#     "Coat",
-#     "Sandal",
-#     "Shirt",
-#     "Sneaker",
-#     "Bag",
-#     "Ankle boot",
-# ]
-
-model.eval()
-x, y = training_data[0][0], training_data[0][1]
-with torch.no_grad():
-    # x, y = x.to(device), y.to(device)
-    pred = model(x.to(device))
-    predicted, actual = classes[pred[0].argmax(0)], classes[y]
-    print(f'Predicted: "{predicted}", Actual: "{actual}"')
