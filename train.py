@@ -8,76 +8,26 @@ from torchvision.datasets import ImageFolder
 from torchvision.transforms import ToTensor, Lambda, Compose
 import matplotlib.pyplot as plt
 import os
-
-# # 訓練データをdatasetsからダウンロード
-# training_data = datasets.FashionMNIST(
-#     root="data",
-#     train=True,
-#     download=True,
-#     transform=ToTensor(),
-# )
-
-# # テストデータをdatasetsからダウンロード
-# test_data = datasets.FashionMNIST(
-#     root="data",
-#     train=False,
-#     download=True,
-#     transform=ToTensor(),
-# )
-
-# batch_size = 64
-
-# # データローダーの作成
-# train_dataloader = DataLoader(training_data, batch_size=batch_size)
-# test_dataloader = DataLoader(test_data, batch_size=batch_size)
-
-transform = transforms.Compose([
-    transforms.Resize((28, 28)),
-    transforms.ToTensor(),
-    transforms.Normalize((0.5,), (0.5,))
-])
+from common import transform
+from common import NeuralNetwork
+import pickle
 
 training_data = ImageFolder(root=os.path.expanduser('~/kimono/train_data/'), transform=transform)
 train_dataloader = DataLoader(training_data, batch_size=10, shuffle=True)
 test_dataloader = DataLoader(training_data, batch_size=10, shuffle=True)
 
-print(training_data.class_to_idx)
+with open('class_to_idx.pickle.pkl', 'wb') as f:
+    pickle.dump(training_data.class_to_idx, f)
 
 for X, y in test_dataloader:
     print("Shape of X [N, C, H, W]: ", X.shape)
     print("Shape of y: ", y.shape, y.dtype)
     break
     
-# 訓練に際して、可能であればGPU（cuda）を設定します。GPUが搭載されていない場合はCPUを使用します
 device = "cuda" if torch.cuda.is_available() else "cpu"
 print("Using {} device".format(device))
 
-# modelを定義します
-class NeuralNetwork(nn.Module):
-    def __init__(self):
-        super(NeuralNetwork, self).__init__()
-        self.flatten = nn.Flatten()
-        self.linear_relu_stack = nn.Sequential(
-            nn.Linear(28*28*3, 512),
-            nn.ReLU(),
-            nn.Linear(512, 512),
-            nn.ReLU(),
-            nn.Linear(512, 5),
-            nn.ReLU()
-        )
-
-    def forward(self, x):
-        x = self.flatten(x)
-        logits = self.linear_relu_stack(x)
-        return logits
-
 model = NeuralNetwork().to(device)
-
-# weights = torchvision.models.ResNet18_Weights.DEFAULT
-# model = torchvision.models.resnet18(weights=weights)
-# model.fc = nn.Linear(model.fc.in_features, len(training_data.classes))  
-# print(model)
-
 loss_fn = nn.CrossEntropyLoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
 
