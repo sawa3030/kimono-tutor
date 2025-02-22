@@ -20,14 +20,6 @@ print("Using {} device".format(device))
 model = NeuralNetwork().to(device)
 model.load_state_dict(torch.load("model.pth"))
 
-classes = [
-    "cross",
-    "maki",
-    "otaiko",
-    "tare",
-    "tesaki",
-]
-
 model.eval()
 
 image_path = os.path.expanduser("~/kimono/train_data/cross/image.png")
@@ -39,6 +31,6 @@ with open("class_to_idx.pickle.pkl", "rb") as f:
     class_to_idx = pickle.load(f)
     idx_to_class = {v: k for k, v in class_to_idx.items()}
     with torch.no_grad():
-        id = model(image.to(device)).argmax(1)
-        output = classes[id]
+        id = model(image.to(device)).argmax(1).item()
+        output = idx_to_class[id]
         print(output)
