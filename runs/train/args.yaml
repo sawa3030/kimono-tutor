@@ -1,6 +1,6 @@
 task: segment
 mode: train
-model: yolov8n-seg.pt
+model: yolo11n-seg.pt
 data: config.yaml
 epochs: 10
 time: null

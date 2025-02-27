@@ -2,4 +2,6 @@ train_data/
 venv/
 data/
 prev_data/
+brain_data/
+images/
 yolo*.pt

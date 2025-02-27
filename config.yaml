@@ -1,6 +1,6 @@
 path: /home/eri/kimono/data
-train: train
-val: valid  
+train: images/train
+val: images/val
 
 nc: 1
-names: ['duck']
+names: ['obi']
