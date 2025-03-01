@@ -44,10 +44,6 @@ model = YOLO("yolov8x-pose.pt")
 results = model.predict("input.jpg")
 
 keypoints = results[0].keypoints.xy.cpu().numpy()
-confs = results[0].keypoints.conf.cpu().numpy()
-print(confs)
-id = np.argmax(confs)
-print(id)
-# for person in keypoints:
 for x, y in keypoints[0]:
-        cv2.circle(original_image, (int(x), int(y)), 5, (0, 255, 0), -1)
+    cv2.circle(original_image, (int(x), int(y)), 5, (0, 255, 0), -1)
+cv2.imwrite("pose_output.jpg", original_image)
