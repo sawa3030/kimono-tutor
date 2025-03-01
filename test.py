@@ -13,25 +13,15 @@ import torch
 model = YOLO("yolov8x-seg.pt")
 results = model.predict("input.jpg", save=True, show=True)
 print("-----results-----")
-# for i in range(len(results)):
-for result in results:
-    masks = result.masks.data
-    boxes = result.boxes.data
-    # extract classes
-    clss = boxes[:, 5]
-    # get indices of results where class is 0 (people in COCO)
-    people_indices = torch.where(clss == 0)
-    # use these indices to extract the relevant masks
-    people_masks = masks[people_indices]
-    # scale for visualizing results
-    people_mask = torch.any(people_masks, dim=0).int() * 255
-    # save to file
-    print(people_mask.cpu().numpy())
-    cv2.imwrite('merged_segs.jpg', people_mask.cpu().numpy().astype(np.uint8))
-    # print(type(results[i].masks.data))
-    # print(results[i].masks.data.shape)
-    # # cv2.imwrite("mask"+str(i)+".jpg", results[i].masks.cpu().numpy().masks[0])
-    # cv2.imwrite("mask"+str(i)+".jpg", results[i].masks.data[0])
+
+masks = results[0].masks.data
+boxes = results[0].boxes.data
+clss = boxes[:, 5]
+conf = boxes[:, 4]
+people_indices = torch.where(clss == 0)
+people_id = torch.argmax(conf[people_indices])
+people_mask = masks[people_id].int() * 255
+cv2.imwrite('merged_segs.jpg', people_mask.cpu().numpy().astype(np.uint8))
 
 image = cv2.imread("input.jpg")
 image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
