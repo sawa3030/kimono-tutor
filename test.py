@@ -7,8 +7,6 @@ from ultralytics import YOLO
 # Get the segmentation
 model = YOLO("yolov8x-seg.pt")
 results = model.predict("input.jpg", save=True, show=True)
-print("-----results-----")
-
 masks = results[0].masks.data
 boxes = results[0].boxes.data
 clss = boxes[:, 5]
@@ -41,3 +39,15 @@ if contours:
 contour_output = cv2.drawContours(original_image, contours, -1, (0, 255, 0))
 # cv2.imwrite("contour_output.jpg", contour_output)
 cv2.imwrite("point_output.jpg", gray_image)
+
+model = YOLO("yolov8x-pose.pt")
+results = model.predict("input.jpg")
+
+keypoints = results[0].keypoints.xy.cpu().numpy()
+confs = results[0].keypoints.conf.cpu().numpy()
+print(confs)
+id = np.argmax(confs)
+print(id)
+# for person in keypoints:
+for x, y in keypoints[0]:
+        cv2.circle(original_image, (int(x), int(y)), 5, (0, 255, 0), -1)
