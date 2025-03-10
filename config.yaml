@@ -1,6 +1,0 @@
-path: /home/eri/kimono/data
-train: images/train
-val: images/val
-
-nc: 1
-names: ['obi']
