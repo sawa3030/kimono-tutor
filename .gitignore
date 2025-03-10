@@ -6,3 +6,4 @@ brain_data/
 images/
 input.jpg
 yolo*.pt
+runs/
