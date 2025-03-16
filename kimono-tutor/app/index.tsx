@@ -1,12 +1,24 @@
 import { useState } from "react";
-import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
+import {
+  Button,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Image,
+} from "react-native";
+import {
+  CameraView,
+  CameraType,
+  useCameraPermissions,
+  Camera,
+} from "expo-camera";
 
 export default function Index() {
   const [facing, setFacing] = useState<CameraType>("back");
   const [permission, requestPermission] = useCameraPermissions();
   const [cameraRef, setCamera] = useState<CameraView | null>(null);
-  const [picture, setPicture] = useState(null);
+  const [picture, setPicture] = useState<null | string>(null);
 
   if (!permission) {
     // Camera permissions are still loading.
@@ -32,27 +44,36 @@ export default function Index() {
       const photo = await cameraRef.takePictureAsync();
       console.log(photo);
       console.log("took photo");
+      if (!photo) {
+        console.log("no photo");
+        return;
+      }
+      setPicture(photo.uri);
     }
   };
 
   return (
     <View style={styles.container}>
-      <CameraView
-        style={styles.camera}
-        facing={facing}
-        ref={(ref) => {
-          setCamera(ref);
-        }}
-      >
-        <View>
-          <TouchableOpacity onPress={toggleCameraFacing}>
-            <Text>Flip Camera</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={takePicture}>
-            <Text>Take Picture</Text>
-          </TouchableOpacity>
-        </View>
-      </CameraView>
+      {picture ? (
+        <Image source={{ uri: picture }} style={{ width: 200, height: 200 }} />
+      ) : (
+        <CameraView
+          style={styles.camera}
+          facing={facing}
+          ref={(ref) => {
+            setCamera(ref);
+          }}
+        >
+          <View>
+            <TouchableOpacity onPress={toggleCameraFacing}>
+              <Text>Flip Camera</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={takePicture}>
+              <Text>Take Picture</Text>
+            </TouchableOpacity>
+          </View>
+        </CameraView>
+      )}
     </View>
   );
 }
