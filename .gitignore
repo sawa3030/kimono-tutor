@@ -8,3 +8,4 @@ input.jpg
 yolo*.pt
 runs/
 __pycache__/
+uploaded/*
