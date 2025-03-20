@@ -55,13 +55,17 @@ export default function Index() {
   const postPicture = async () => {
     if (picture) {
       const formData = new FormData();
+      // formData.append("picture", picture);
+      // formData.append("number", "1");
+      const data = { number: "1" };
 
       const uploadResponse = await fetch("http://127.0.0.1:8000", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: formData,
+        // body: formData,
+        body: JSON.stringify(data),
       });
       const result = await uploadResponse.json();
       console.log(result);
