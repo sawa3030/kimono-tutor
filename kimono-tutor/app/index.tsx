@@ -52,10 +52,31 @@ export default function Index() {
     }
   };
 
+  const postPicture = async () => {
+    if (picture) {
+      const formData = new FormData();
+
+      const uploadResponse = await fetch("http://127.0.0.1:8000", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: formData,
+      });
+      const result = await uploadResponse.json();
+      console.log(result);
+    }
+  };
+
   return (
     <View style={styles.container}>
       {picture ? (
-        <Image source={{ uri: picture }} style={{ width: 200, height: 200 }} />
+        <>
+          <TouchableOpacity onPress={postPicture}>
+            <Text>Post Picture</Text>
+          </TouchableOpacity>
+          <Image source={{ uri: picture }} style={styles.camera} />
+        </>
       ) : (
         <CameraView
           style={styles.camera}

@@ -7,3 +7,4 @@ images/
 input.jpg
 yolo*.pt
 runs/
+__pycache__/
