@@ -1,8 +1,9 @@
-from fastapi import FastAPI, Request, status
+from fastapi import FastAPI, Request, status, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+import shutil
 
 app = FastAPI()
 
@@ -23,7 +24,10 @@ class NumberRequest(BaseModel):
     number: str
 
 @app.post("/")
-async def root(data: NumberRequest):
-    return {"message": int(data.number)+2}
+async def root(picture: UploadFile = File(...)):
+    with open("/home/eri/kimono/uploaded/pic.jpg", 'wb+') as buffer:
+        shutil.copyfileobj(picture.file, buffer)
+    return {"message": 3}
+    # return {"message": "Hello"}
 
 
