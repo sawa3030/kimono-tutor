@@ -4,8 +4,8 @@ data/
 prev_data/
 brain_data/
 images/
-input.jpg
 yolo*.pt
 runs/
 __pycache__/
 uploaded/*
+.mypy_cache/
