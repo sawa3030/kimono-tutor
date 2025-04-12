@@ -30,6 +30,17 @@ pip install requirements.txt
 python test.py
 ```
 
+アプリを実行する際
+```shell
+uvicorn get_pic:app --reload
+```
+
+別ターミナルで、
+```shell
+cd kimono-tutor
+npx expo start
+```
+
 ## ライセンス
 
 このソフトウェアは [MIT](./LICENSE) ライセンスのもとで公開されています。
