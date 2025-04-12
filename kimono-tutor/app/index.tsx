@@ -75,7 +75,7 @@ export default function Index() {
       var blob = dataURItoBlob(pictureURI);
       formData.append("picture", blob);
 
-      const uploadResponse = await fetch("http://127.0.0.1:8000", {
+      const uploadResponse = await fetch("http://localhost:8000", {
         method: "POST",
         body: formData,
       });
