@@ -13,4 +13,7 @@ if not os.path.exists(save_dir):
 model = YOLO("weights/best.pt")
 results = model.predict("input.jpg", save=True, show=True)
 
-
+def evaluate_pic(img_path):
+    model = YOLO("weights/best.pt")
+    results = model.predict(img_path)
+    return "evaluate done"

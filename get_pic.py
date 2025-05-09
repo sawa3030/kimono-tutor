@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 import shutil
+from ultralytics import YOLO
 
 app = FastAPI()
 
@@ -25,9 +26,10 @@ class NumberRequest(BaseModel):
 
 @app.post("/")
 async def root(picture: UploadFile = File(...)):
-    with open("/home/eri/kimono/uploaded/pic.jpg", 'wb+') as buffer:
+    with open("./uploaded/pic.jpg", 'wb+') as buffer:
         shutil.copyfileobj(picture.file, buffer)
-    return {"message": 3}
-    # return {"message": "Hello"}
+    model = YOLO("weights/best.pt")
+    results = model.predict("./uploaded/pic.jpg", save=True)
+    return {"message": len(results)}
 
 
