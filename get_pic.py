@@ -5,7 +5,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 import shutil
 from ultralytics import YOLO
-from test import dummy_function
+from test import evaluate_image
 
 app = FastAPI()
 
@@ -34,4 +34,4 @@ async def root(picture: UploadFile = File(...)):
         shutil.copyfileobj(picture.file, buffer)
     # model = YOLO("weights/best.pt")
     # results = model.predict("./uploaded/pic.jpg", save=True)
-    return {"message": dummy_function()}
+    return {"message": evaluate_image("./uploaded/pic.jpg")}
