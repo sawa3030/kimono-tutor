@@ -13,23 +13,24 @@ app.add_middleware(
     allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"]
+    allow_headers=["*"],
 )
 
+
 @app.exception_handler(RequestValidationError)
-async def handler(request:Request, exc:RequestValidationError):
+async def handler(request: Request, exc: RequestValidationError):
     print(exc)
     return JSONResponse(content={}, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
+
 
 class NumberRequest(BaseModel):
     number: str
 
+
 @app.post("/")
 async def root(picture: UploadFile = File(...)):
-    with open("./uploaded/pic.jpg", 'wb+') as buffer:
+    with open("./uploaded/pic.jpg", "wb+") as buffer:
         shutil.copyfileobj(picture.file, buffer)
     model = YOLO("weights/best.pt")
     results = model.predict("./uploaded/pic.jpg", save=True)
     return {"message": len(results)}
-
-

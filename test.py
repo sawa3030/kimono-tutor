@@ -6,11 +6,13 @@ from ultralytics import YOLO
 import os
 from enum import Enum
 
+
 class Label(Enum):
     KIMONO = 0
     ERI = 1
     OBI = 2
     HANERI = 3
+
 
 save_dir = "output"
 if not os.path.exists(save_dir):
@@ -26,14 +28,24 @@ classes = results[0].boxes.cls
 for c, mask in zip(classes, masks):
     mask = mask.int() * 255
     if c == Label.KIMONO.value:
-        cv2.imwrite(os.path.join(save_dir,'kimono.jpg'), mask.cpu().numpy().astype(np.uint8))
+        cv2.imwrite(
+            os.path.join(save_dir, "kimono.jpg"), mask.cpu().numpy().astype(np.uint8)
+        )
     elif c == Label.ERI.value:
-        cv2.imwrite(os.path.join(save_dir,'eri.jpg'), mask.cpu().numpy().astype(np.uint8))
+        cv2.imwrite(
+            os.path.join(save_dir, "eri.jpg"), mask.cpu().numpy().astype(np.uint8)
+        )
     elif c == Label.OBI.value:
-        cv2.imwrite(os.path.join(save_dir,'obi.jpg'), mask.cpu().numpy().astype(np.uint8))
+        cv2.imwrite(
+            os.path.join(save_dir, "obi.jpg"), mask.cpu().numpy().astype(np.uint8)
+        )
 
         image = mask.cpu().numpy().astype(np.uint8)
-        contours, _ = cv2.findContours(mask.cpu().numpy().astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        contours, _ = cv2.findContours(
+            mask.cpu().numpy().astype(np.uint8),
+            cv2.RETR_EXTERNAL,
+            cv2.CHAIN_APPROX_SIMPLE,
+        )
 
         if len(contours) == 0:
             print("No contours found.")
@@ -58,9 +70,18 @@ for c, mask in zip(classes, masks):
         img_color = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
         for name, pt in corner_points.items():
             cv2.circle(img_color, pt, 6, (0, 0, 255), -1)
-            cv2.putText(img_color, name, (pt[0] + 5, pt[1] - 5),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
-        cv2.imwrite(os.path.join(save_dir,'obi.jpg'), img_color)
+            cv2.putText(
+                img_color,
+                name,
+                (pt[0] + 5, pt[1] - 5),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.5,
+                (0, 255, 0),
+                1,
+            )
+        cv2.imwrite(os.path.join(save_dir, "obi.jpg"), img_color)
 
     elif c == Label.HANERI.value:
-        cv2.imwrite(os.path.join(save_dir,'haneri.jpg'), mask.cpu().numpy().astype(np.uint8))
+        cv2.imwrite(
+            os.path.join(save_dir, "haneri.jpg"), mask.cpu().numpy().astype(np.uint8)
+        )
