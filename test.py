@@ -7,6 +7,10 @@ import os
 from enum import Enum
 
 
+def dummy_function():
+    return "dummy"
+
+
 class Label(Enum):
     KIMONO = 0
     ERI = 1
